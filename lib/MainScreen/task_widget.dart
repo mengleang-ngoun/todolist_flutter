@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TaskWidget extends StatefulWidget {
-  const TaskWidget({Key? key}) : super(key: key);
-
+  TaskWidget({Key? key, required this.title, required this.date}) : super(key: key);
+  String title;
+  String date;
   @override
   State<TaskWidget> createState() => _TaskWidgetState();
 }
@@ -27,7 +28,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                   });
                 }),
             Text(
-              'Hello',
+              widget.title,
               style: TextStyle(
                   color: done ? Colors.grey : Colors.black,
                   decoration: done ? TextDecoration.lineThrough : null),

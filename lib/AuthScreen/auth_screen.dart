@@ -10,14 +10,14 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreen extends State<AuthScreen> {
-  String navScreen = 'SignInFormWidget';
+  String navWidget = 'SignInFormWidget';
 
-  Widget get mainScreen {
-    if (navScreen == 'SignInFormWidget') {
+  Widget get authWidget {
+    if (navWidget == 'SignInFormWidget') {
       return SignInFormWidget(
         onclick: () {
           setState(() {
-            navScreen = 'SignUpFormWidget';
+            navWidget = 'SignUpFormWidget';
           });
         },
       );
@@ -25,7 +25,7 @@ class _AuthScreen extends State<AuthScreen> {
       return SignUpFormWidget(
         onclick: () {
           setState(() {
-            navScreen = 'SignInFormWidget';
+            navWidget = 'SignInFormWidget';
           });
         },
       );
@@ -39,7 +39,7 @@ class _AuthScreen extends State<AuthScreen> {
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.only(top: 200, left: 20, right: 20),
-        child: mainScreen,
+        child: authWidget,
       ),
     );
   }

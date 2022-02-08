@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:regexed_validator/regexed_validator.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todolist_flutter/MainScreen/main_screen.dart';
+
 
 class SignUpFormWidget extends StatefulWidget {
   final Function() onclick;
@@ -16,8 +22,66 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
   bool switchWidget = false;
 
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _username = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
+
+  bool isLoading = false;
+
+  String? decodedResponse;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _email.dispose();
+    _username.dispose();
+    _password.dispose();
+    _confirmPassword.dispose();
+    super.dispose();
+  }
+
+  Widget btnOrProgress(){
+    if(isLoading){
+      return Column(
+          children: const [CircularProgressIndicator()]
+      );
+    }else{
+      return ElevatedButton(
+        onPressed: () async{
+          if(_formKey.currentState!.validate()){
+            setState(() {
+              decodedResponse = null;
+            });
+            var response = await http
+                .post(Uri.parse('http://10.0.2.2:8000/api/register'), body: {
+              'email': _email.text,
+              'password': _password.text,
+              'name': _username.text
+            });
+            var tmp = jsonDecode(utf8.decode(response.bodyBytes))["message"] ;
+            if(tmp == "Email already register"){
+              setState(() {
+                decodedResponse = tmp;
+              });
+            }else{
+              setState(() {
+                decodedResponse = null;
+              });
+              final prefs = await SharedPreferences.getInstance();
+              prefs.setString("token", tmp["token"]);
+              Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const MainScreen()));
+            }
+          }
+        },
+        child: const Text("Sign Up"),
+        style: ButtonStyle(
+          backgroundColor:
+          MaterialStateProperty.all<Color>(Colors.tealAccent.shade400),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +104,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
           Padding(
             padding: const EdgeInsets.only(top: 5, bottom: 5),
             child: TextFormField(
+              controller: _email,
               keyboardType: TextInputType.emailAddress,
               style: const TextStyle(color: Colors.black),
               validator: (v){
@@ -51,6 +116,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
               },
               decoration: InputDecoration(
                 labelText: "Email",
+                errorText: decodedResponse,
                 errorStyle: const TextStyle(color: Colors.redAccent),
                 focusedErrorBorder: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
@@ -71,6 +137,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
           Padding(
             padding: const EdgeInsets.only(top: 5, bottom: 5),
             child: TextFormField(
+              controller: _username,
               keyboardType: TextInputType.text,
               style: const TextStyle(color: Colors.black),
               validator: (v){
@@ -178,20 +245,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              if(_formKey.currentState!.validate()){
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
-              }
-            },
-            child: const Text("Sign Up"),
-            style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.tealAccent.shade400),
-            ),
-          ),
+          btnOrProgress(),
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: GestureDetector(
