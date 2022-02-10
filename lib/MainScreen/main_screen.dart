@@ -11,12 +11,15 @@ import 'add_task_widget.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
+
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   User? user;
+  bool listUpdate = true;
+
 
   void logoutHandler() async {
     final prefs = await SharedPreferences.getInstance();
@@ -73,7 +76,13 @@ class _MainScreenState extends State<MainScreen> {
                       topRight: Radius.circular(15.0)),
                 ),
                 builder: (BuildContext context) {
-                  return AddTaskWidget(user: user);
+                  return AddTaskWidget(
+                    widgetTodolistUpdate: () {
+                      setState(() {
+                        listUpdate = !listUpdate;
+                      });
+                    },
+                  );
                 });
           },
           child: const Icon(
@@ -89,7 +98,14 @@ class _MainScreenState extends State<MainScreen> {
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: TodoWidget(user: user.data),
+                    child: TodoWidget(
+                      user: user.data,
+                        widgetTodolistUpdate: () {
+                          setState(() {
+                            listUpdate = !listUpdate;
+                          });
+                        }
+                    ),
                   ),
                 );
               } else {
