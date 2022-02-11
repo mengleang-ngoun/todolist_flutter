@@ -55,12 +55,17 @@ class _MainScreenState extends State<MainScreen> {
                   color: Colors.black,
                 ))
           ],
-          title: const Text(
-            "Todolist",
-            style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF00BFA5)),
+          title: Row(
+            children: [
+              Container(child: Image.asset('lib/images/icon.png'),height: 45,width: 45,padding: const EdgeInsets.only(right: 10),),
+              const Text(
+                "Todolist",
+                style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF00BFA5)),
+              ),
+            ],
           ),
           iconTheme: const IconThemeData(color: Colors.grey),
         ),
@@ -95,17 +100,15 @@ class _MainScreenState extends State<MainScreen> {
           builder: (BuildContext context, AsyncSnapshot<User> user) {
             if (user.connectionState == ConnectionState.done) {
               if (user.hasData) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: TodoWidget(
+                return Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: TodoWidget(
                       user: user.data,
-                        widgetTodolistUpdate: () {
-                          setState(() {
-                            listUpdate = !listUpdate;
-                          });
-                        }
-                    ),
+                      widgetTodolistUpdate: () {
+                        setState(() {
+                          listUpdate = !listUpdate;
+                        });
+                      }
                   ),
                 );
               } else {

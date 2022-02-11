@@ -80,10 +80,11 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Container(child: Image.asset('lib/images/icon.png'),height: 200,width: 200,padding: const EdgeInsets.all(45),),
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
             child: Text(
-              "To Do List",
+              "Todo List",
               style: TextStyle(
                   fontSize: 35,
                   fontWeight: FontWeight.w600,

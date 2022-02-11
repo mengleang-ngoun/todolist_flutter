@@ -59,7 +59,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
               'password': _password.text,
               'name': _username.text
             });
-            var tmp = jsonDecode(utf8.decode(response.bodyBytes))["message"] ;
+            var tmp = jsonDecode(utf8.decode(response.bodyBytes));
             if(tmp == "Email already register"){
               setState(() {
                 decodedResponse = tmp;
@@ -91,6 +91,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Container(child: Image.asset('lib/images/icon.png'),height: 200,width: 200,padding: const EdgeInsets.all(45),),
           Padding(
             padding: const EdgeInsets.only(bottom: 15),
             child: Text(

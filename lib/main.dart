@@ -38,10 +38,8 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
-              print("MainScreen");
               return const MainScreen();
             } else {
-              print("AuthScreen");
               return const AuthScreen();
             }
           } else {
